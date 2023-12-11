@@ -8,8 +8,9 @@ function POMDPTools.action_info(planner::WorstCaseForwardSearchPlanner, b, d)
         expand!(tree, sol)
         iter += 1
     end
-    # backup!(tree)
-    return tree
+    a_idx, Qa = best_action_and_value(tree)
+    a = ordered_actions(planner.pomdp)[a_idx]
+    return a, (; V=Qa, tree)
 end
 
 POMDPs.action(planner::WorstCaseForwardSearchPlanner, b, d) = first(action_info(planner, b, d))

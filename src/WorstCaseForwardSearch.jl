@@ -18,4 +18,6 @@ export WorstCaseForwardSearchSolver, WorstCaseForwardSearchPlanner
 
 include("search.jl")
 
+include("backup.jl")
+
 end # module WorstCaseForwardSearch

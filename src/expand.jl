@@ -75,6 +75,7 @@ function expand_belief!(tree, sol, b_idx::Int)
         end
         push!(tree.ba_pruned, any_pruned)
         push!(tree.poba, pobas)
+        push!(tree.rba, belief_reward(cpomdp, b, a))
     end
 end
 

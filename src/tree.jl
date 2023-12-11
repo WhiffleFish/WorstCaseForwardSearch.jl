@@ -4,13 +4,13 @@ Base.@kwdef struct ForwardSearchTree
     b_children::Vector{UnitRange{Int}}          = UnitRange{Int}[]
     ba_children::Vector{UnitRange{Int}}         = UnitRange{Int}[]
     Qba::Vector{Float64}                        = Float64[]
-    poba::Vector{Vector{Float64}}                       = Vector{Float64}[]
+    poba::Vector{Vector{Float64}}               = Vector{Float64}[]
     is_terminal::BitVector                      = BitVector()
     real::Vector{Int}                           = Int[1]
     depth::Vector{Int}                          = Int[0]
     b_pruned::BitVector                         = BitVector()
     ba_pruned::BitVector                        = BitVector()
-    rba::Vector{Vector{Float64}}                = Vector{Float64}[]
+    rba::Vector{Float64}                        = Float64[] 
     cba::Vector{Vector{Float64}}                = Vector{Float64}[]
     cpomdp::TabularCPOMDP
 end
@@ -82,6 +82,7 @@ function set_root!(tree, pomdp, b, d::Float64)
         end
         push!(tree.ba_pruned, any_pruned)
         push!(tree.poba, pobas)
+        push!(tree.rba, belief_reward(cpomdp, b, a))
     end
 end
 
@@ -96,6 +97,10 @@ function worst_case_cost(cpomdp::TabularCPOMDP, b::SparseVector, a::Int)
         max_cost = max(max_cost, C[s,a,1])
     end
     return max_cost
+end
+
+function belief_reward(cpomdp::TabularCPOMDP, b::SparseVector, a::Int)
+    return dot(@view(cpomdp.R[:,a]), b)
 end
 
 worst_case_cost(tree::ForwardSearchTree, b, a) = worst_case_cost(tree.cpomdp, b, a)
