@@ -11,6 +11,8 @@ include("updater.jl")
 
 include("tree.jl")
 
+include("expand.jl")
+
 include("solver.jl")
 export WorstCaseForwardSearchSolver, WorstCaseForwardSearchPlanner
 

@@ -1,7 +1,8 @@
 Base.@kwdef struct WorstCaseForwardSearchSolver{RNG<:Random.AbstractRNG}
     max_time::Float64   = Inf
     max_iter::Int       = 100
-    max_depth::Int      = 3
+    max_depth::Int      = 10
+    max_belief::Int     = 10_000
     rng::RNG            = Random.default_rng()
 end
 
