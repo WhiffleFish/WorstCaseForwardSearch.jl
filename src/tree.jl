@@ -20,12 +20,16 @@ function Base.empty!(tree::ForwardSearchTree)
     empty!(tree.b)
     empty!(tree.admissible_cost)
     empty!(tree.b_children)
+    empty!(tree.ba_children)
     empty!(tree.Qba)
+    empty!(tree.poba)
     empty!(tree.is_terminal)
     resize!(tree.real, 1)
     resize!(tree.depth, 1)
     empty!(tree.b_pruned)
     empty!(tree.ba_pruned)
+    empty!(tree.rba)
+    empty!(tree.cba)
     tree
 end
 
