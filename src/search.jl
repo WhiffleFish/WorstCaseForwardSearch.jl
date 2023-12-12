@@ -9,7 +9,7 @@ function POMDPTools.action_info(planner::WorstCaseForwardSearchPlanner, b, d)
         iter += 1
     end
     a_idx, Qa = best_action_and_value(tree)
-    a = ordered_actions(planner.pomdp)[a_idx]
+    a = ordered_actions(planner.cpomdp)[a_idx]
     return a, (; V=Qa, tree)
 end
 
