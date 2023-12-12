@@ -3,30 +3,24 @@ function expand!(tree::ForwardSearchTree, sol)
     (;rng) = sol
     A = actions(cpomdp)
     O = observations(cpomdp)
-    for b_idx ∈ tree.real
+    
+    iter = if length(tree.real) > sol.max_expansions
+        rand(tree.real, sol.max_expansions)
+    else
+        copy(tree.real)
+    end
+
+    for b_idx ∈ iter
         tree.is_terminal[b_idx] && continue
         tree.b_pruned[b_idx] && continue
         b_children = tree.b_children[b_idx]
-        # if all(tree.ba_pruned[ba_idx])
-            # tree.b_pruned[b_idx] = true
-            # continue
-        # end
-        d_max = 0.0
-        bp_idx_max = 0
         for a ∈ A
             ba_idx = b_children[a]
             tree.ba_pruned[ba_idx] && continue
             o = rand(rng, O) # TODO: make this belief dependent
             bp_idx = tree.ba_children[ba_idx][o]
-            bp = tree.b[bp_idx]
-            # TODO: check if bp already expanded -- then we don't need to query distance
-            d = distance_to_tree(tree, bp)
-            if d > d_max
-                d_max = d
-                bp_idx_max = bp_idx
-            end
+            expand!(tree, sol, bp_idx)
         end
-        d_max > 0. && expand!(tree, sol, bp_idx_max)
     end
 end
 
@@ -49,7 +43,6 @@ function expand_belief!(tree, sol, b_idx::Int)
     tree.b_children[b_idx] = (n_ba+1) : (n_ba + length(A))
     d_idx = tree.depth[b_idx]
     for a ∈ A
-        length(tree.b) >= sol.max_belief && break
         n_b = length(tree.b)
         push!(tree.ba_children, (n_b+1) : (n_b+length(O)) )
         pred = dropzeros!(cpomdp.T[a]*b)
@@ -58,7 +51,6 @@ function expand_belief!(tree, sol, b_idx::Int)
         worst_cost = worst_case_cost(tree, b, a)
         d′ = (1/γ)*(tree.admissible_cost[b_idx] - worst_cost)
         for o ∈ O
-            length(tree.b) >= sol.max_belief && break
             bp = corrector(cpomdp, pred, a, o)
             po = sum(bp)
             po > 0. && (bp.nzval ./= po)
