@@ -7,7 +7,7 @@ TODO:
         max_expansions real beliefs and just expand those. Then computation time is pretty much constant in tree size.
 =#
 
-Base.@kwdef struct WorstCaseForwardSearchSolver{RNG<:Random.AbstractRNG}
+Base.@kwdef struct WorstCaseForwardSearchSolver{RNG<:Random.AbstractRNG} <: Solver
     max_time::Float64   = Inf
     max_iter::Int       = 100
     max_depth::Int      = 10
@@ -15,7 +15,7 @@ Base.@kwdef struct WorstCaseForwardSearchSolver{RNG<:Random.AbstractRNG}
     rng::RNG            = Random.default_rng()
 end
 
-struct WorstCaseForwardSearchPlanner{P<:CPOMDP}
+struct WorstCaseForwardSearchPlanner{P<:CPOMDP} <: Policy
     cpomdp::P
     sol::WorstCaseForwardSearchSolver
     tree::ForwardSearchTree
