@@ -56,6 +56,7 @@ function set_root!(tree, pomdp, b, d::Float64)
     b = _initialize_belief(pomdp, b)
     push!(tree.admissible_cost, d)
     push!(tree.b, b)
+    push!(tree.is_terminal, false)
     push!(tree.b_pruned, d < 0.0)
     push!(tree.b_children, (n_ba+1) : (n_ba + length(A)))
     
